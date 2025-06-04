@@ -4,7 +4,6 @@ import { Habit, loadHabits, saveHabits, getPeriodStart } from '../lib/storage';
 import { useRouter } from 'next/navigation';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
-import { Select } from './ui/select';
 import { Label } from './ui/label';
 
 export default function HabitForm({ habit }: { habit?: Habit }) {
@@ -78,38 +77,38 @@ export default function HabitForm({ habit }: { habit?: Habit }) {
       </div>
       <div className="space-y-1">
         <Label>Tekrar Sayısı</Label>
-        <Input type="number" min="1" value={target} onChange={e => setTarget(parseInt(e.target.value))} />
+        <div className="flex flex-wrap gap-2">
+          {Array.from({ length: 8 }, (_, i) => i + 1).map(n => (
+            <button
+              key={n}
+              type="button"
+              onClick={() => setTarget(n)}
+              className={`w-8 h-8 rounded-full border flex items-center justify-center text-sm ${target === n ? 'bg-blue-600 text-white' : 'bg-gray-100'}`}
+            >
+              {n}
+            </button>
+          ))}
+        </div>
       </div>
       <div className="space-y-1">
         <Label>Periyot</Label>
-        <div className="flex gap-4">
-          <label className="flex items-center gap-1">
-            <input
-              type="radio"
-              value="daily"
-              checked={frequency === 'daily'}
-              onChange={e => setFrequency(e.target.value as any)}
-            />
-            <span>Günlük</span>
-          </label>
-          <label className="flex items-center gap-1">
-            <input
-              type="radio"
-              value="weekly"
-              checked={frequency === 'weekly'}
-              onChange={e => setFrequency(e.target.value as any)}
-            />
-            <span>Haftalık</span>
-          </label>
-          <label className="flex items-center gap-1">
-            <input
-              type="radio"
-              value="monthly"
-              checked={frequency === 'monthly'}
-              onChange={e => setFrequency(e.target.value as any)}
-            />
-            <span>Aylık</span>
-          </label>
+        <div className="flex gap-2">
+          {(
+            [
+              { value: 'daily', label: 'Günlük' },
+              { value: 'weekly', label: 'Haftalık' },
+              { value: 'monthly', label: 'Aylık' },
+            ] as { value: Habit['frequency']; label: string }[]
+          ).map(opt => (
+            <button
+              key={opt.value}
+              type="button"
+              onClick={() => setFrequency(opt.value)}
+              className={`px-3 py-1 rounded border text-sm ${frequency === opt.value ? 'bg-blue-600 text-white' : 'bg-gray-100'}`}
+            >
+              {opt.label}
+            </button>
+          ))}
         </div>
       </div>
       <div className="flex gap-2">
