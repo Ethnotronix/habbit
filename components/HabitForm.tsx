@@ -1,13 +1,21 @@
 'use client';
 import { useState } from 'react';
-import { Habit, loadHabits, saveHabits, getPeriodStart } from '../lib/storage';
+import {
+  Habit,
+  loadHabits,
+  saveHabits,
+  getPeriodStart,
+  syncToCloud,
+} from '../lib/storage';
 import { useRouter } from 'next/navigation';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
+import { useAuth } from './AuthProvider';
 
-export default function HabitForm({ habit }: { habit?: Habit }) {
+export default function HabitForm({ habit, initialFrequency }: { habit?: Habit; initialFrequency?: Habit['frequency'] }) {
   const router = useRouter();
+  const { user } = useAuth();
   const [name, setName] = useState(habit?.name || '');
   const [color, setColor] = useState(habit?.color || '#3498db');
   const colors = [
@@ -21,7 +29,7 @@ export default function HabitForm({ habit }: { habit?: Habit }) {
     '#95a5a6',
   ];
   const [target, setTarget] = useState(habit?.target || 1);
-  const [frequency, setFrequency] = useState<Habit['frequency']>(habit?.frequency || 'daily');
+  const [frequency, setFrequency] = useState<Habit['frequency']>(habit?.frequency || initialFrequency || 'daily');
 
   const save = () => {
     const habits = loadHabits();
@@ -45,6 +53,7 @@ export default function HabitForm({ habit }: { habit?: Habit }) {
       });
     }
     saveHabits(habits);
+    if (user) syncToCloud(user, habits);
     router.push('/');
   };
 
@@ -52,6 +61,7 @@ export default function HabitForm({ habit }: { habit?: Habit }) {
     if (!habit) return;
     const habits = loadHabits().filter(h => h.id !== habit.id);
     saveHabits(habits);
+    if (user) syncToCloud(user, habits);
     router.push('/');
   };
 
@@ -90,27 +100,29 @@ export default function HabitForm({ habit }: { habit?: Habit }) {
           ))}
         </div>
       </div>
-      <div className="space-y-1">
-        <Label>Periyot</Label>
-        <div className="flex gap-2">
-          {(
-            [
-              { value: 'daily', label: 'Günlük' },
-              { value: 'weekly', label: 'Haftalık' },
-              { value: 'monthly', label: 'Aylık' },
-            ] as { value: Habit['frequency']; label: string }[]
-          ).map(opt => (
-            <button
-              key={opt.value}
-              type="button"
-              onClick={() => setFrequency(opt.value)}
-              className={`px-3 py-1 rounded border text-sm ${frequency === opt.value ? 'bg-blue-600 text-white' : 'bg-gray-100'}`}
-            >
-              {opt.label}
-            </button>
-          ))}
+      {!initialFrequency && (
+        <div className="space-y-1">
+          <Label>Periyot</Label>
+          <div className="flex gap-2">
+            {(
+              [
+                { value: 'daily', label: 'Günlük' },
+                { value: 'weekly', label: 'Haftalık' },
+                { value: 'monthly', label: 'Aylık' },
+              ] as { value: Habit['frequency']; label: string }[]
+            ).map(opt => (
+              <button
+                key={opt.value}
+                type="button"
+                onClick={() => setFrequency(opt.value)}
+                className={`px-3 py-1 rounded border text-sm ${frequency === opt.value ? 'bg-blue-600 text-white' : 'bg-gray-100'}`}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
       <div className="flex gap-2">
         <Button onClick={save}>Kaydet</Button>
         {habit && (

@@ -1,3 +1,6 @@
+import { supabase } from './supabase';
+import { User } from '@supabase/supabase-js';
+
 export type Habit = {
   id: number;
   name: string;
@@ -41,5 +44,21 @@ export function resetIfNeeded(habit: Habit) {
   if (habit.lastReset !== start) {
     habit.count = 0;
     habit.lastReset = start;
+  }
+}
+
+export async function syncFromCloud(user: User): Promise<Habit[]> {
+  const { data } = await supabase
+    .from('habits')
+    .select('*')
+    .eq('user_id', user.id);
+  return (data as any as Habit[]) || [];
+}
+
+export async function syncToCloud(user: User, habits: Habit[]) {
+  await supabase.from('habits').delete().eq('user_id', user.id);
+  if (habits.length > 0) {
+    const rows = habits.map(h => ({ ...h, user_id: user.id }));
+    await supabase.from('habits').insert(rows);
   }
 }
