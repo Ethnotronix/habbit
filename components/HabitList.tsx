@@ -31,24 +31,24 @@ export default function HabitList() {
     init();
   }, [user]);
 
-  const update = (id: number, delta: number) => {
+  const update = async (id: number, delta: number) => {
     const h = loadHabits();
     const habit = h.find(x => x.id === id);
     if (!habit) return;
     resetIfNeeded(habit);
     habit.count = Math.max(0, Math.min(habit.target, habit.count + delta));
     saveHabits(h);
-    if (user) syncToCloud(user, h);
+    if (user) await syncToCloud(user, h);
     setHabits([...h]);
   };
 
-  const moveHabit = (id: number, freq: Habit['frequency']) => {
+  const moveHabit = async (id: number, freq: Habit['frequency']) => {
     const h = loadHabits();
     const habit = h.find(x => x.id === id);
     if (!habit) return;
     habit.frequency = freq;
     saveHabits(h);
-    if (user) syncToCloud(user, h);
+    if (user) await syncToCloud(user, h);
     setHabits([...h]);
   };
 
@@ -71,9 +71,9 @@ export default function HabitList() {
         <div
           key={freq}
           onDragOver={e => e.preventDefault()}
-          onDrop={e => {
+          onDrop={async e => {
             const id = Number(e.dataTransfer.getData('id'));
-            if (id) moveHabit(id, freq);
+            if (id) await moveHabit(id, freq);
           }}
         >
           <div className="flex justify-between items-center mb-2">
@@ -95,10 +95,10 @@ export default function HabitList() {
                   {h.name} ({h.count}/{h.target})
                 </span>
                 <div className="space-x-1">
-                  <Button variant="outline" className="px-2 py-1" onClick={() => update(h.id, -1)}>
+                  <Button variant="outline" className="px-2 py-1" onClick={() => void update(h.id, -1)}>
                     -
                   </Button>
-                  <Button variant="outline" className="px-2 py-1" onClick={() => update(h.id, 1)}>
+                  <Button variant="outline" className="px-2 py-1" onClick={() => void update(h.id, 1)}>
                     +
                   </Button>
                   <Button asChild variant="outline" className="px-2 py-1">

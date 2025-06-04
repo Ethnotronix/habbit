@@ -31,7 +31,7 @@ export default function HabitForm({ habit, initialFrequency }: { habit?: Habit; 
   const [target, setTarget] = useState(habit?.target || 1);
   const [frequency, setFrequency] = useState<Habit['frequency']>(habit?.frequency || initialFrequency || 'daily');
 
-  const save = () => {
+  const save = async () => {
     const habits = loadHabits();
     if (habit) {
       const h = habits.find(h => h.id === habit.id);
@@ -53,15 +53,15 @@ export default function HabitForm({ habit, initialFrequency }: { habit?: Habit; 
       });
     }
     saveHabits(habits);
-    if (user) syncToCloud(user, habits);
+    if (user) await syncToCloud(user, habits);
     router.push('/');
   };
 
-  const deleteHabit = () => {
+  const deleteHabit = async () => {
     if (!habit) return;
     const habits = loadHabits().filter(h => h.id !== habit.id);
     saveHabits(habits);
-    if (user) syncToCloud(user, habits);
+    if (user) await syncToCloud(user, habits);
     router.push('/');
   };
 
@@ -124,9 +124,9 @@ export default function HabitForm({ habit, initialFrequency }: { habit?: Habit; 
         </div>
       )}
       <div className="flex gap-2">
-        <Button onClick={save}>Kaydet</Button>
+        <Button onClick={() => void save()}>Kaydet</Button>
         {habit && (
-          <Button variant="destructive" onClick={deleteHabit}>Sil</Button>
+          <Button variant="destructive" onClick={() => void deleteHabit()}>Sil</Button>
         )}
       </div>
     </div>
