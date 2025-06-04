@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Select } from './ui/select';
+import { Label } from './ui/label';
 
 export default function HabitForm({ habit }: { habit?: Habit }) {
   const router = useRouter();
@@ -47,20 +48,20 @@ export default function HabitForm({ habit }: { habit?: Habit }) {
 
   return (
     <div className="space-y-4">
-      <div>
-        <label className="block mb-1">İsim</label>
+      <div className="space-y-1">
+        <Label>İsim</Label>
         <Input value={name} onChange={e => setName(e.target.value)} />
       </div>
-      <div>
-        <label className="block mb-1">Renk</label>
+      <div className="space-y-1">
+        <Label>Renk</Label>
         <Input type="color" className="w-16 h-10" value={color} onChange={e => setColor(e.target.value)} />
       </div>
-      <div>
-        <label className="block mb-1">Tekrar Sayısı</label>
+      <div className="space-y-1">
+        <Label>Tekrar Sayısı</Label>
         <Input type="number" min="1" value={target} onChange={e => setTarget(parseInt(e.target.value))} />
       </div>
-      <div>
-        <label className="block mb-1">Aralık</label>
+      <div className="space-y-1">
+        <Label>Aralık</Label>
         <Select value={frequency} onChange={e => setFrequency(e.target.value as any)}>
           <option value="daily">Günlük</option>
           <option value="weekly">Haftalık</option>
@@ -70,7 +71,7 @@ export default function HabitForm({ habit }: { habit?: Habit }) {
       <div className="flex gap-2">
         <Button onClick={save}>Kaydet</Button>
         {habit && (
-          <Button className="bg-red-600 hover:bg-red-700" onClick={deleteHabit}>Sil</Button>
+          <Button variant="destructive" onClick={deleteHabit}>Sil</Button>
         )}
       </div>
     </div>

@@ -3,6 +3,7 @@ import HabitForm from '../../../components/HabitForm';
 import { loadHabits } from '../../../lib/storage';
 import Link from 'next/link';
 import { Card, CardContent } from '../../../components/ui/card';
+import { Button } from '../../../components/ui/button';
 
 export default function EditPage({ params }: { params: { id: string } }) {
   const habits = loadHabits();
@@ -17,7 +18,9 @@ export default function EditPage({ params }: { params: { id: string } }) {
           <HabitForm habit={habit} />
         </CardContent>
       </Card>
-      <Link href="/" className="text-blue-600 block text-center hover:underline">Geri</Link>
+      <Button asChild variant="link" className="w-full justify-center">
+        <Link href="/">Geri</Link>
+      </Button>
     </main>
   );
 }
