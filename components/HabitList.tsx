@@ -1,8 +1,6 @@
 'use client';
 import {
   Habit,
-  loadHabits,
-  saveHabits,
   resetIfNeeded,
   syncFromCloud,
   syncToCloud,
@@ -18,37 +16,33 @@ export default function HabitList() {
 
   useEffect(() => {
     async function init() {
-      let h = loadHabits();
-      if (user) {
-        const cloud = await syncFromCloud(user);
-        if (cloud.length > 0) h = cloud;
-      }
+      if (!user) return;
+      const h = await syncFromCloud(user);
       h.forEach(resetIfNeeded);
-      saveHabits(h);
-      if (user) await syncToCloud(user, h);
+      await syncToCloud(user, h);
       setHabits([...h]);
     }
-    init();
+    void init();
   }, [user]);
 
   const update = async (id: number, delta: number) => {
-    const h = loadHabits();
+    if (!user) return;
+    const h = [...habits];
     const habit = h.find(x => x.id === id);
     if (!habit) return;
     resetIfNeeded(habit);
     habit.count = Math.max(0, Math.min(habit.target, habit.count + delta));
-    saveHabits(h);
-    if (user) await syncToCloud(user, h);
+    await syncToCloud(user, h);
     setHabits([...h]);
   };
 
   const moveHabit = async (id: number, freq: Habit['frequency']) => {
-    const h = loadHabits();
+    if (!user) return;
+    const h = [...habits];
     const habit = h.find(x => x.id === id);
     if (!habit) return;
     habit.frequency = freq;
-    saveHabits(h);
-    if (user) await syncToCloud(user, h);
+    await syncToCloud(user, h);
     setHabits([...h]);
   };
 

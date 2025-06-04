@@ -18,7 +18,7 @@ Next.js ve Tailwind CSS kullanılarak hazırlanmış basit bir alışkanlık tak
 
 `NEXT_PUBLIC_SUPABASE_URL` ve `NEXT_PUBLIC_SUPABASE_ANON_KEY` değişkenlerini `.env` dosyanıza ekleyerek Supabase bağlantısını tanımlayın. Örnek için `.env.example` dosyasına bakabilirsiniz.
 
-Giriş yapan kullanıcıların alışkanlıkları Supabase üzerinde saklanır. Giriş yapılmadığında veriler tarayıcıdaki `localStorage`'da tutulmaya devam eder.
+Uygulama çalışabilmek için oturum açmış bir kullanıcıya ihtiyaç duyar ve bütün alışkanlık verileri her zaman Supabase üzerinde saklanır.
 
 
 ### Supabase Tablosu
