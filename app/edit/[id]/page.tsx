@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import HabitForm from '../../../components/HabitForm';
 import { loadHabits } from '../../../lib/storage';
 import Link from 'next/link';
+import { Card, CardContent } from '../../../components/ui/card';
 
 export default function EditPage({ params }: { params: { id: string } }) {
   const habits = loadHabits();
@@ -11,8 +12,12 @@ export default function EditPage({ params }: { params: { id: string } }) {
   return (
     <main className="max-w-xl mx-auto space-y-4">
       <h1 className="text-2xl font-bold text-center">Alışkanlığı Düzenle</h1>
-      <HabitForm habit={habit} />
-      <Link href="/" className="text-blue-600 block text-center">Geri</Link>
+      <Card>
+        <CardContent>
+          <HabitForm habit={habit} />
+        </CardContent>
+      </Card>
+      <Link href="/" className="text-blue-600 block text-center hover:underline">Geri</Link>
     </main>
   );
 }

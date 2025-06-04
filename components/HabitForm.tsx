@@ -2,6 +2,9 @@
 import { useState } from 'react';
 import { Habit, loadHabits, saveHabits, getPeriodStart } from '../lib/storage';
 import { useRouter } from 'next/navigation';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
+import { Select } from './ui/select';
 
 export default function HabitForm({ habit }: { habit?: Habit }) {
   const router = useRouter();
@@ -46,28 +49,28 @@ export default function HabitForm({ habit }: { habit?: Habit }) {
     <div className="space-y-4">
       <div>
         <label className="block mb-1">İsim</label>
-        <input className="border p-2 w-full" value={name} onChange={e => setName(e.target.value)} />
+        <Input value={name} onChange={e => setName(e.target.value)} />
       </div>
       <div>
         <label className="block mb-1">Renk</label>
-        <input type="color" className="w-16 h-10" value={color} onChange={e => setColor(e.target.value)} />
+        <Input type="color" className="w-16 h-10" value={color} onChange={e => setColor(e.target.value)} />
       </div>
       <div>
         <label className="block mb-1">Tekrar Sayısı</label>
-        <input type="number" className="border p-2 w-full" min="1" value={target} onChange={e => setTarget(parseInt(e.target.value))} />
+        <Input type="number" min="1" value={target} onChange={e => setTarget(parseInt(e.target.value))} />
       </div>
       <div>
         <label className="block mb-1">Aralık</label>
-        <select className="border p-2 w-full" value={frequency} onChange={e => setFrequency(e.target.value as any)}>
+        <Select value={frequency} onChange={e => setFrequency(e.target.value as any)}>
           <option value="daily">Günlük</option>
           <option value="weekly">Haftalık</option>
           <option value="monthly">Aylık</option>
-        </select>
+        </Select>
       </div>
       <div className="flex gap-2">
-        <button className="bg-blue-600 text-white px-4 py-2" onClick={save}>Kaydet</button>
+        <Button onClick={save}>Kaydet</Button>
         {habit && (
-          <button className="bg-red-600 text-white px-4 py-2" onClick={deleteHabit}>Sil</button>
+          <Button className="bg-red-600 hover:bg-red-700" onClick={deleteHabit}>Sil</Button>
         )}
       </div>
     </div>
