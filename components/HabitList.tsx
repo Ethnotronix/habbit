@@ -53,24 +53,15 @@ export default function HabitList() {
                   {h.name} ({h.count}/{h.target})
                 </span>
                 <div className="space-x-1">
-                  <Button
-                    className="bg-black/30 hover:bg-black/40 px-2 py-1"
-                    onClick={() => update(h.id, -1)}
-                  >
+                  <Button variant="outline" className="px-2 py-1" onClick={() => update(h.id, -1)}>
                     -
                   </Button>
-                  <Button
-                    className="bg-black/30 hover:bg-black/40 px-2 py-1"
-                    onClick={() => update(h.id, 1)}
-                  >
+                  <Button variant="outline" className="px-2 py-1" onClick={() => update(h.id, 1)}>
                     +
                   </Button>
-                  <Link
-                    href={`/edit/${h.id}`}
-                    className="bg-black/30 hover:bg-black/40 px-2 py-1 rounded transition-colors"
-                  >
-                    ✏️
-                  </Link>
+                  <Button asChild variant="outline" className="px-2 py-1">
+                    <Link href={`/edit/${h.id}`}>✏️</Link>
+                  </Button>
                 </div>
               </div>
             ))}

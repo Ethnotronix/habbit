@@ -1,6 +1,7 @@
 import HabitForm from '../../components/HabitForm';
 import Link from 'next/link';
 import { Card, CardContent } from '../../components/ui/card';
+import { Button } from '../../components/ui/button';
 
 export default function AddPage() {
   return (
@@ -11,7 +12,9 @@ export default function AddPage() {
           <HabitForm />
         </CardContent>
       </Card>
-      <Link href="/" className="text-blue-600 block text-center hover:underline">Geri</Link>
+      <Button asChild variant="link" className="w-full justify-center">
+        <Link href="/">Geri</Link>
+      </Button>
     </main>
   );
 }
