@@ -2,10 +2,9 @@
 import { useState } from 'react';
 import {
   Habit,
-  loadHabits,
-  saveHabits,
   getPeriodStart,
   syncToCloud,
+  syncFromCloud,
 } from '../lib/storage';
 import { useRouter } from 'next/navigation';
 import { Button } from './ui/button';
@@ -32,7 +31,8 @@ export default function HabitForm({ habit, initialFrequency }: { habit?: Habit; 
   const [frequency, setFrequency] = useState<Habit['frequency']>(habit?.frequency || initialFrequency || 'daily');
 
   const save = async () => {
-    const habits = loadHabits();
+    if (!user) return;
+    const habits = await syncFromCloud(user);
     if (habit) {
       const h = habits.find(h => h.id === habit.id);
       if (h) {
@@ -52,16 +52,14 @@ export default function HabitForm({ habit, initialFrequency }: { habit?: Habit; 
         lastReset: getPeriodStart(Date.now(), frequency),
       });
     }
-    saveHabits(habits);
-    if (user) await syncToCloud(user, habits);
+    await syncToCloud(user, habits);
     router.push('/');
   };
 
   const deleteHabit = async () => {
-    if (!habit) return;
-    const habits = loadHabits().filter(h => h.id !== habit.id);
-    saveHabits(habits);
-    if (user) await syncToCloud(user, habits);
+    if (!habit || !user) return;
+    const habits = (await syncFromCloud(user)).filter(h => h.id !== habit.id);
+    await syncToCloud(user, habits);
     router.push('/');
   };
 
