@@ -50,15 +50,34 @@ export function resetIfNeeded(habit: Habit) {
 export async function syncFromCloud(user: User): Promise<Habit[]> {
   const { data } = await supabase
     .from('habits')
-    .select('*')
+    .select('id, name, color, target, frequency, count, lastreset')
     .eq('user_id', user.id);
-  return (data as any as Habit[]) || [];
+  return (
+    (data as any[])?.map(row => ({
+      id: row.id,
+      name: row.name,
+      color: row.color,
+      target: row.target,
+      frequency: row.frequency,
+      count: row.count,
+      lastReset: row.lastreset,
+    })) || []
+  );
 }
 
 export async function syncToCloud(user: User, habits: Habit[]) {
   await supabase.from('habits').delete().eq('user_id', user.id);
   if (habits.length > 0) {
-    const rows = habits.map(h => ({ ...h, user_id: user.id }));
+    const rows = habits.map(h => ({
+      id: h.id,
+      name: h.name,
+      color: h.color,
+      target: h.target,
+      frequency: h.frequency,
+      count: h.count,
+      lastreset: h.lastReset,
+      user_id: user.id,
+    }));
     await supabase.from('habits').insert(rows);
   }
 }
