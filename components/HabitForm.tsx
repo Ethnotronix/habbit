@@ -81,12 +81,36 @@ export default function HabitForm({ habit }: { habit?: Habit }) {
         <Input type="number" min="1" value={target} onChange={e => setTarget(parseInt(e.target.value))} />
       </div>
       <div className="space-y-1">
-        <Label>Aralık</Label>
-        <Select value={frequency} onChange={e => setFrequency(e.target.value as any)}>
-          <option value="daily">Günlük</option>
-          <option value="weekly">Haftalık</option>
-          <option value="monthly">Aylık</option>
-        </Select>
+        <Label>Periyot</Label>
+        <div className="flex gap-4">
+          <label className="flex items-center gap-1">
+            <input
+              type="radio"
+              value="daily"
+              checked={frequency === 'daily'}
+              onChange={e => setFrequency(e.target.value as any)}
+            />
+            <span>Günlük</span>
+          </label>
+          <label className="flex items-center gap-1">
+            <input
+              type="radio"
+              value="weekly"
+              checked={frequency === 'weekly'}
+              onChange={e => setFrequency(e.target.value as any)}
+            />
+            <span>Haftalık</span>
+          </label>
+          <label className="flex items-center gap-1">
+            <input
+              type="radio"
+              value="monthly"
+              checked={frequency === 'monthly'}
+              onChange={e => setFrequency(e.target.value as any)}
+            />
+            <span>Aylık</span>
+          </label>
+        </div>
       </div>
       <div className="flex gap-2">
         <Button onClick={save}>Kaydet</Button>
