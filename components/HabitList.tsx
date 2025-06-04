@@ -2,6 +2,7 @@
 import { Habit, loadHabits, saveHabits, resetIfNeeded } from '../lib/storage';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { Button } from './ui/button';
 
 export default function HabitList() {
   const [habits, setHabits] = useState<Habit[]>([]);
@@ -45,28 +46,28 @@ export default function HabitList() {
             {groups[freq].map(h => (
               <div
                 key={h.id}
-                className="p-2 rounded text-white flex justify-between items-center"
+                className="p-3 rounded-lg text-white flex justify-between items-center shadow"
                 style={{ backgroundColor: h.color }}
               >
-                <span>
+                <span className="font-medium">
                   {h.name} ({h.count}/{h.target})
                 </span>
                 <div className="space-x-1">
-                  <button
-                    className="bg-black/30 px-2"
+                  <Button
+                    className="bg-black/30 hover:bg-black/40 px-2 py-1"
                     onClick={() => update(h.id, -1)}
                   >
                     -
-                  </button>
-                  <button
-                    className="bg-black/30 px-2"
+                  </Button>
+                  <Button
+                    className="bg-black/30 hover:bg-black/40 px-2 py-1"
                     onClick={() => update(h.id, 1)}
                   >
                     +
-                  </button>
+                  </Button>
                   <Link
                     href={`/edit/${h.id}`}
-                    className="bg-black/30 px-2"
+                    className="bg-black/30 hover:bg-black/40 px-2 py-1 rounded transition-colors"
                   >
                     ✏️
                   </Link>
