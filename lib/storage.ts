@@ -50,7 +50,7 @@ export function resetIfNeeded(habit: Habit) {
 export async function syncFromCloud(user: User): Promise<Habit[]> {
   const { data } = await supabase
     .from('habits')
-    .select('id, name, color, target, frequency, count, lastreset')
+    .select('id, name, color, target, frequency, count, lastReset')
     .eq('user_id', user.id);
   return (
     (data as any[])?.map(row => ({
@@ -60,7 +60,7 @@ export async function syncFromCloud(user: User): Promise<Habit[]> {
       target: row.target,
       frequency: row.frequency,
       count: row.count,
-      lastReset: row.lastreset,
+      lastReset: row.lastReset,
     })) || []
   );
 }
@@ -75,7 +75,7 @@ export async function syncToCloud(user: User, habits: Habit[]) {
       target: h.target,
       frequency: h.frequency,
       count: h.count,
-      lastreset: h.lastReset,
+      lastReset: h.lastReset,
       user_id: user.id,
     }));
     await supabase.from('habits').insert(rows);
